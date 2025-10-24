@@ -5,6 +5,7 @@ const Alerta = require('../models/Alerta');
 //     internal_id: "AFIP-123",
 //     data_hora: 2023-10-10T10:00:00Z,
 //     temperatura: 22.5
+//     descricao: "Alerta de temperatura fora do range"
 // }
 
 async function getAlertas(req, res) {
@@ -49,12 +50,12 @@ async function getAlertasById(req, res) {
 }
 
 async function createAlerta(req, res) {
-    const { internal_id, data_hora, temperatura } = req.body;
-    if (!internal_id || !data_hora || temperatura === undefined) {
+    const { internal_id, data_hora, temperatura, descricao } = req.body;
+    if (!internal_id || !data_hora || temperatura === undefined || !descricao ) {
         return res.status(400).json({ error: "Dados do alerta incompletos" });
     }
     try {
-        const newAlerta = new Alerta({ internal_id, data_hora: new Date(data_hora), temperatura });
+        const newAlerta = new Alerta({ internal_id, data_hora: new Date(data_hora), temperatura, descricao: descricao.toString() });
         await newAlerta.save();
         res.status(201).json(newAlerta);
     } catch (error) {
